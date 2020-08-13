@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/mohammadm8r/FinalProjectBackEnd#readme",
   "dependencies": {
-    "@hapi/hapi": "^19.2.0"
+    "@hapi/hapi": "^19.2.0",
+    "@hapi/inert": "^6.0.2"
   }
 }
