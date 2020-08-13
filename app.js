@@ -2,6 +2,32 @@
 
 const Hapi = require('@hapi/hapi');
 const Path = require('path');
+const { Client } = require('pg');
+const { stringify } = require('querystring');
+
+function request_student_info(username){
+    const client = new Client({
+        user: 'Mohammad',
+        host: '127.0.0.1',
+        database: 'Attendance',
+        port: 5432,
+        password: 123
+    });
+    client.connect();
+    
+    const query = {
+        text: 'SELECT * FROM student WHERE student_username = $1',
+        values: [username],
+      }
+    client
+        .query(query)
+        .then(res => {
+            console.log(JSON.stringify(res.rows[0]))
+            return JSON.stringify(res.rows[0]);
+        })
+        .catch(e => console.error(e.stack))
+}
+
 
 const init = async () => {
 
@@ -29,7 +55,18 @@ const init = async () => {
         method: 'GET',
         path: '/student/pic/{std_id}',
         handler: (request, h) => {
-            return h.file('student/' + request.params.std_id + '.jpg');
+            return h.file('student/picture/' + request.params.std_id + '.jpg');
+        }
+    });
+
+    server.route({
+        method: 'POST',
+        path: '/student/info',
+        handler: (request, h) => {
+            const payload = request.payload;
+            // console.log(payload);
+            // return `welcome ${payload.username}`
+            request_student_info(payload.username);
         }
     });
 
