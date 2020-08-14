@@ -20,6 +20,7 @@ function connect_to_db() {
 
 module.exports = {
     client: connect_to_db(),
+    
     request_student_info: async function (client, username) {
         const query = {
             text: 'SELECT * FROM student WHERE student_username = $1',
@@ -36,4 +37,20 @@ module.exports = {
         }
 
     },
+
+    request_master_info: async function (client, username) {
+        const query = {
+            text: 'SELECT * FROM master WHERE master_username = $1',
+            values: [username],
+        }
+        try {
+            const res = await client.query(query)
+            console.log(res.rows[0])
+            return res.rows[0];
+        } catch (err) {
+            console.log(err.stack)
+            return 'user not found';
+        }
+    },
+
 }
