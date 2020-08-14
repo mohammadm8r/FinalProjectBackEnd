@@ -1,4 +1,6 @@
-export function connect_to_db(){
+const { Client } = require('pg');
+
+function connect_to_db() {
     const client = new Client({
         user: 'Mohammad',
         host: '127.0.0.1',
@@ -16,20 +18,22 @@ export function connect_to_db(){
     return client;
 }
 
-let client = connect_to_db();
+module.exports = {
+    client: connect_to_db(),
+    request_student_info: async function (client, username) {
+        const query = {
+            text: 'SELECT * FROM student WHERE student_username = $1',
+            values: [username],
+        }
 
-export async function request_student_info(client ,username) {
-    const query = {
-        text: 'SELECT * FROM student WHERE student_username = $1',
-        values: [username],
-    }
+        try {
+            const res = await client.query(query)
+            console.log(res.rows[0])
+            return res.rows[0];
+        } catch (err) {
+            console.log(err.stack)
+            return 'user not found';
+        }
 
-    try {
-        const res = await client.query(query)
-        console.log(res.rows[0])
-        return res.rows[0];
-    } catch (err) {
-        console.log(err.stack)
-        return 'user not found';
-    }
+    },
 }

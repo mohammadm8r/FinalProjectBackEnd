@@ -1,17 +1,21 @@
-var myQueries = require('./queries')
+const { isUndefined } = require('util');
+
+var db = require('../../queries')
 
 module.exports = [
-    {method: 'POST',
-    path: '/student/info',
-    handler: (request, h) => {
-        const payload = request.payload;
-        // console.log(payload);
-        // console.log(request_student_info(payload.username));
-        let res = myQueries.request_student_info(payload.username);
-        if (isUndefined(res)) {
-            return `user not found`
-        } else {
-            return res;
+    {
+        method: 'POST',
+        path: '/student/info',
+        handler: (request, h) => {
+            const payload = request.payload;
+            // console.log(payload);
+            // console.log(request_student_info(payload.username));
+            let res = db.request_student_info(db.client, payload.username);
+            if (isUndefined(res)) {
+                return `user not found`
+            } else {
+                return res;
+            }
         }
-    }}
+    }
 ];

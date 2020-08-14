@@ -2,9 +2,6 @@
 // import * as myRoutes from './routes.js'
 const Hapi = require('@hapi/hapi');
 const Path = require('path');
-const { Client } = require('pg');
-const { stringify } = require('querystring');
-const { isUndefined } = require('util');
 const routes = require('./config/routes');
 
 
