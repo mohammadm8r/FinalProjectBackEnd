@@ -4,28 +4,38 @@ const Hapi = require('@hapi/hapi');
 const Path = require('path');
 const { Client } = require('pg');
 const { stringify } = require('querystring');
+const { isUndefined } = require('util');
 
-function request_student_info(username){
+async function request_student_info(username) {
     const client = new Client({
         user: 'Mohammad',
         host: '127.0.0.1',
         database: 'Attendance',
         port: 5432,
-        password: 123
+        password: '123'
     });
-    client.connect();
-    
+
+    client.connect(err => {
+        if (err) {
+            console.error('DB connection error', err.stack)
+        } else {
+            console.log('connected to DB')
+        }
+    })
+
     const query = {
         text: 'SELECT * FROM student WHERE student_username = $1',
         values: [username],
-      }
-    client
-        .query(query)
-        .then(res => {
-            console.log(JSON.stringify(res.rows[0]))
-            return JSON.stringify(res.rows[0]);
-        })
-        .catch(e => console.error(e.stack))
+    }
+
+    try {
+        const res = await client.query(query)
+        console.log(res.rows[0])
+        return res.rows[0];
+    } catch (err) {
+        console.log(err.stack)
+        return 'user not found';
+    }
 }
 
 
@@ -65,8 +75,14 @@ const init = async () => {
         handler: (request, h) => {
             const payload = request.payload;
             // console.log(payload);
-            // return `welcome ${payload.username}`
-            request_student_info(payload.username);
+            // console.log(request_student_info(payload.username));
+            let res = request_student_info(payload.username);
+            if (isUndefined(res)) {
+                return `user not found`
+            } else {
+                return res;
+            }
+
         }
     });
 
