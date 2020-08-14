@@ -8,11 +8,11 @@ const { isUndefined } = require('util');
 
 async function request_student_info(username) {
     const client = new Client({
-        user: 'Mohammad',
+        user: 'test',
         host: '127.0.0.1',
-        database: 'Attendance',
+        database: 'fp',
         port: 5432,
-        password: '123'
+        password: 'test123'
     });
 
     client.connect(err => {
@@ -47,7 +47,8 @@ const init = async () => {
         routes: {
             files: {
                 relativeTo: Path.join(__dirname, 'public')
-            }
+            },
+            cors: true
         }
     });
 
