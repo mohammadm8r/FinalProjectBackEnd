@@ -53,4 +53,35 @@ module.exports = {
         }
     },
 
+    request_courses_info: async function (client, username) {
+        const query = {
+            text: 'select * from course_presentation inner join master on course_presentation.master_id = master.master_id inner join course on course.course_id = course_presentation.course_id where master.master_username = $1 ',
+            values: [username],
+        }
+        try {
+            const res = await client.query(query)
+            console.log(res.rows)
+            return res.rows;
+        } catch (err) {
+            console.log(err.stack)
+            return 'user not found';
+        }
+    },
+
+    request_course_students_info: async function (client, course_title, course_group) {
+        const query = {
+            text: 'select * from register  inner join course_presentation on course_presentation.id = register.cp_id inner join student on student.student_id = register.student_id inner join course on course.course_id = course_presentation.course_id where course.course_title = $1 and course_presentation.course_group = $2',
+            values: [course_title, course_group],
+        }
+        try {
+            const res = await client.query(query)
+            console.log(res.rows)
+            return res.rows;
+        } catch (err) {
+            console.log(err.stack)
+            return 'user not found';
+        }
+    },
+
+
 }
