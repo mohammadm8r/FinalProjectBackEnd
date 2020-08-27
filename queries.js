@@ -83,23 +83,6 @@ module.exports = {
         }
     },
 
-    request_student_attendance_info: async function (client, name, family) {
-        const query = {
-            text: 'select * from attendance inner join class_sessions on attendance.session_id = class_sessions.id inner join register on class_sessions.cp_id = register.cp_id inner join student on register.student_id = student.student_id where student_name = $1 and student_family = $2',
-            values: [name, family],
-        }
-        try {
-            const res = await client.query(query)
-            // console.log(res.rows)
-            for(var i = 0; i < res.rows.length; i++){
-                console.log(res.rows[i])
-            }
-            return res.rows;
-        } catch (err) {
-            console.log(err.stack)
-            return 'user not found';
-        }
-    },
 
     request_student_courses_info: async function (client, username) {
         const query = {
@@ -108,11 +91,77 @@ module.exports = {
         }
         try {
             const res = await client.query(query)
-            console.log(res.rows)
             return res.rows;
         } catch (err) {
             console.log(err.stack)
             return 'user not found';
         }
     },
+
+    request_student_sessions_info: async function (client, username, class_title, class_group) {
+        var query = {};
+        if (username.includes('@')){
+            query = {
+                text: "select * from course_presentation inner join class_sessions on class_sessions.cp_id = course_presentation.id inner join register on register.cp_id = course_presentation.id inner join student on student.student_id = register.student_id inner join course on course_presentation.course_id = course.course_id left join attendance on attendance.session_id = class_sessions.id and attendance.student_id = student.student_id where student_username = $1 and course_title = $2 and course_group = $3 order by class_sessions.id",
+                values: [username, class_title, class_group],
+            }
+        }
+        else {
+            query = {
+                text: "select * from course_presentation inner join class_sessions on class_sessions.cp_id = course_presentation.id inner join register on register.cp_id = course_presentation.id inner join student on student.student_id = register.student_id inner join course on course_presentation.course_id = course.course_id left join attendance on attendance.session_id = class_sessions.id and attendance.student_id = student.student_id where CONCAT(student.student_name, ' ', student.student_family) LIKE $1 and course_title = $2 and course_group = $3 order by class_sessions.id",
+                values: [username, class_title, class_group],
+            }
+        }
+        
+        try {
+            const res = await client.query(query);
+            for (var i = 0; i < res.rows.length; i++){
+                switch(res.rows[i].attendance_status){
+                    case 1:
+                        res.rows[i].attendance_matn = 'حاضر';
+                        break;
+                    case 2:
+                    res.rows[i].attendance_matn = 'حاضر';
+                    break;
+                    case 3:
+                        res.rows[i].attendance_matn = 'حاضر';
+                        break;
+                    case 4:
+                        res.rows[i].attendance_matn = 'غایب';
+                        break;
+                    case 5:
+                    res.rows[i].attendance_matn = 'غایب';
+                    break;
+                    case 6:
+                        res.rows[i].attendance_matn = 'غایب';
+                        break;
+                    case null:
+                        res.rows[i].attendance_matn = 'موجود نیست';
+                        break;
+                    default:
+                        res.rows[i].attendance_matn = 'موجود نیست';
+                }
+            }
+            return res.rows;
+        } catch (err) {
+            console.log(err.stack)
+            return 'user not found';
+        }
+    },
+
+    num_of_requests: async function (client, studentID) {
+        const query = {
+            text: "select COUNT(*) from request inner join attendance on request.attendance_id = attendance.id inner join student on student.student_id = attendance.student_id where student.student_id = $1",
+            values: [studentID],
+        }
+        try {
+            const res = await client.query(query)
+            console.log(res.rows[0])
+            return res.rows[0];
+        } catch (err) {
+            console.log(err.stack)
+            return 'user not found';
+        }
+    },
+
 }

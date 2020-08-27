@@ -5,12 +5,12 @@ var db = require('../../queries');
 module.exports = [
     {
         method: 'POST',
-        path: '/student/attendance/info',
+        path: '/requestsCount',
         handler: (request, h) => {
             const payload = request.payload;
             // console.log(payload);
             // console.log(request_student_info(payload.username));
-            let res = db.request_student_attendance_info(db.client, payload.name, payload.family);
+            let res = db.num_of_requests(db.client, payload.student_id);
             if (isUndefined(res)) {
                 return `user not found`
             } else {
