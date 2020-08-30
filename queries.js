@@ -102,13 +102,13 @@ module.exports = {
         var query = {};
         if (username.includes('@')){
             query = {
-                text: "select * from course_presentation inner join class_sessions on class_sessions.cp_id = course_presentation.id inner join register on register.cp_id = course_presentation.id inner join student on student.student_id = register.student_id inner join course on course_presentation.course_id = course.course_id left join attendance on attendance.session_id = class_sessions.id and attendance.student_id = student.student_id where student_username = $1 and course_title = $2 and course_group = $3 order by class_sessions.id",
+                text: "select class_sessions.id as session_id, session_date, start_time, end_time, attendance.id as attendance_id, attendance_status from course_presentation inner join class_sessions on class_sessions.cp_id = course_presentation.id inner join register on register.cp_id = course_presentation.id inner join student on student.student_id = register.student_id inner join course on course_presentation.course_id = course.course_id left join attendance on attendance.session_id = class_sessions.id and attendance.student_id = student.student_id where student_username = $1 and course_title = $2 and course_group = $3 order by class_sessions.id",
                 values: [username, class_title, class_group],
             }
         }
         else {
             query = {
-                text: "select * from course_presentation inner join class_sessions on class_sessions.cp_id = course_presentation.id inner join register on register.cp_id = course_presentation.id inner join student on student.student_id = register.student_id inner join course on course_presentation.course_id = course.course_id left join attendance on attendance.session_id = class_sessions.id and attendance.student_id = student.student_id where CONCAT(student.student_name, ' ', student.student_family) LIKE $1 and course_title = $2 and course_group = $3 order by class_sessions.id",
+                text: "select class_sessions.id as session_id, session_date, start_time, end_time, attendance.id as attendance_id, attendance_status from course_presentation inner join class_sessions on class_sessions.cp_id = course_presentation.id inner join register on register.cp_id = course_presentation.id inner join student on student.student_id = register.student_id inner join course on course_presentation.course_id = course.course_id left join attendance on attendance.session_id = class_sessions.id and attendance.student_id = student.student_id where CONCAT(student.student_name, ' ', student.student_family) LIKE $1 and course_title = $2 and course_group = $3 order by class_sessions.id",
                 values: [username, class_title, class_group],
             }
         }
@@ -164,4 +164,58 @@ module.exports = {
         }
     },
 
+    insert_request: async function (client, attendance_id, request_type, request_comment) {
+        const query = {
+            text: "insert into requests(attendance_id, request_type, request_comment, request_date, request_time) values($1, $2, $3, current_date, current_time)",
+            values: [attendance_id, request_type, request_comment],
+        }
+        try {
+            const res = await client.query(query)
+            return 'ok';
+        } catch (err) {
+            console.log(err.stack)
+            return 'user not found';
+        }
+    },
+
+    showRequests: async function (client, attendance_id) {
+        const query = {
+            text: "select * from requests where attendance_id = $1",
+            values: [attendance_id],
+        }
+        try {
+            const res = await client.query(query)
+            for (var i = 0; i < res.rows.length; i++){
+                switch(res.rows[i].request_type){
+                    case 1:
+                        res.rows[i].request_type_matn = 'درخواست ثبت حضور';
+                        break;
+                    case 2:
+                    res.rows[i].request_type_matn = 'درخواست ثبت غیبت';
+                    break;
+                    default:
+                        res.rows[i].request_type_matn = 'موجود نیست';
+                }
+            }
+            for (var j = 0; j < res.rows.length; j++){
+                switch(res.rows[j].request_status){
+                    case 0:
+                        res.rows[j].request_status_matn = 'پاسخ داده نشده';
+                        break;
+                    case 1:
+                    res.rows[j].request_status_matn = 'تائید شده';
+                    break;
+                    case 2:
+                    res.rows[j].request_status_matn = 'رد شده';
+                    break;
+                    default:
+                        res.rows[j].request_status_matn = 'موجود نیست';
+                }
+            }
+            return res.rows;
+        } catch (err) {
+            console.log(err.stack)
+            return 'user not found';
+        }
+    },
 }
