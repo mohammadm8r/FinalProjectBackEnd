@@ -151,7 +151,7 @@ module.exports = {
 
     num_of_requests: async function (client, studentID) {
         const query = {
-            text: "select COUNT(*) from request inner join attendance on request.attendance_id = attendance.id inner join student on student.student_id = attendance.student_id where student.student_id = $1",
+            text: "select COUNT(*) from requests inner join attendance on requests.attendance_id = attendance.id where attendance.student_id = $1",
             values: [studentID],
         }
         try {
@@ -218,4 +218,35 @@ module.exports = {
             return 'user not found';
         }
     },
+
+    change_attendance_status: async function (client, attendance_id, attendance_new_status) {
+        const query = {
+            text: "UPDATE attendance SET attendance_status = $1 WHERE id = $2",
+            values: [attendance_new_status, attendance_id],
+        }
+        try {
+            console.log({attendance_id, attendance_new_status})
+            const res = await client.query(query)
+            return {status: 'ok'};
+        } catch (err) {
+            console.log(err.stack)
+            return 'user not found';
+        }
+    },
+
+    change_request_status: async function (client, attendance_id, attendance_new_status, request_status) {
+        const query = {
+            text: "UPDATE attendance SET attendance_status = $1 WHERE id = $2; UPDATE requests SET request_status = $3, request_date = CURRENT_DATE, request_time = CURRENT_TIME WHERE attendance_id = $2",
+            values: [attendance_new_status, attendance_id, request_status],
+        }
+        try {
+            console.log({attendance_id, attendance_new_status, request_status})
+            const res = await client.query(query)
+            return {status: 'ok'};
+        } catch (err) {
+            console.log(err.stack)
+            return 'user not found';
+        }
+    },
+    
 }
