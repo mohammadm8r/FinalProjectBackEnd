@@ -196,7 +196,7 @@ module.exports = {
 
     num_of_requests_unread_each_session: async function (client, attendanceID) {
         const query = {
-            text: "select COUNT(*) from requests where attendance_id = $1",
+            text: "select COUNT(*) from requests where attendance_id = $1 and request_status = 0",
             values: [attendanceID],
         }
         try {

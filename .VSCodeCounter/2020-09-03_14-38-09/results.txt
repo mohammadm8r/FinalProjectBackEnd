@@ -1,0 +1,43 @@
+Date : 2020-09-03 14:38:09
+Directory : d:\Uni Courses\Final Project\hapiBackEnd
+Total : 16 files,  1061 codes, 19 comments, 59 blanks, all 1139 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JavaScript |         14 |        581 |         19 |         57 |        657 |
+| JSON       |          2 |        480 |          0 |          2 |        482 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                       | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                          |         16 |      1,061 |         19 |         59 |      1,139 |
+| config                                                                     |         12 |        261 |         18 |         27 |        306 |
+| config\routes                                                              |         12 |        261 |         18 |         27 |        306 |
++----------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                   | language   | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| d:\Uni Courses\Final Project\hapiBackEnd\app.js                            | JavaScript |         25 |          1 |          7 |         33 |
+| d:\Uni Courses\Final Project\hapiBackEnd\config\routes\Counts.js           | JavaScript |         69 |          4 |          3 |         76 |
+| d:\Uni Courses\Final Project\hapiBackEnd\config\routes\Mastercourses.js    | JavaScript |         17 |          2 |          2 |         21 |
+| d:\Uni Courses\Final Project\hapiBackEnd\config\routes\courseStudents.js   | JavaScript |         17 |          2 |          2 |         21 |
+| d:\Uni Courses\Final Project\hapiBackEnd\config\routes\general.js          | JavaScript |         12 |          0 |          1 |         13 |
+| d:\Uni Courses\Final Project\hapiBackEnd\config\routes\index.js            | JavaScript |         14 |          0 |          1 |         15 |
+| d:\Uni Courses\Final Project\hapiBackEnd\config\routes\insertRequest.js    | JavaScript |         17 |          2 |          3 |         22 |
+| d:\Uni Courses\Final Project\hapiBackEnd\config\routes\master.js           | JavaScript |         17 |          2 |          2 |         21 |
+| d:\Uni Courses\Final Project\hapiBackEnd\config\routes\showRequests.js     | JavaScript |         17 |          0 |          3 |         20 |
+| d:\Uni Courses\Final Project\hapiBackEnd\config\routes\student.js          | JavaScript |         17 |          2 |          3 |         22 |
+| d:\Uni Courses\Final Project\hapiBackEnd\config\routes\studentCourses.js   | JavaScript |         17 |          2 |          2 |         21 |
+| d:\Uni Courses\Final Project\hapiBackEnd\config\routes\studentSessions.js  | JavaScript |         17 |          2 |          2 |         21 |
+| d:\Uni Courses\Final Project\hapiBackEnd\config\routes\updateAttendance.js | JavaScript |         30 |          0 |          3 |         33 |
+| d:\Uni Courses\Final Project\hapiBackEnd\package-lock.json                 | JSON       |        456 |          0 |          1 |        457 |
+| d:\Uni Courses\Final Project\hapiBackEnd\package.json                      | JSON       |         24 |          0 |          1 |         25 |
+| d:\Uni Courses\Final Project\hapiBackEnd\queries.js                        | JavaScript |        295 |          0 |         23 |        318 |
+| Total                                                                      |            |      1,061 |         19 |         59 |      1,139 |
++----------------------------------------------------------------------------+------------+------------+------------+------------+------------+
