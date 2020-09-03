@@ -164,6 +164,51 @@ module.exports = {
         }
     },
 
+    num_of_requests_unread: async function (client, studentID) {
+        const query = {
+            text: "select COUNT(*) from requests inner join attendance on requests.attendance_id = attendance.id where attendance.student_id = $1 and requests.request_status = 0",
+            values: [studentID],
+        }
+        try {
+            const res = await client.query(query)
+            console.log(res.rows[0])
+            return res.rows[0];
+        } catch (err) {
+            console.log(err.stack)
+            return 'user not found';
+        }
+    },
+
+    num_of_absense: async function (client, studentID) {
+        const query = {
+            text: "select COUNT(*) from attendance where student_id = $1 and attendance_status = 4 or attendance_status = 5 or attendance_status = 6",
+            values: [studentID],
+        }
+        try {
+            const res = await client.query(query)
+            console.log(res.rows[0])
+            return res.rows[0];
+        } catch (err) {
+            console.log(err.stack)
+            return 'user not found';
+        }
+    },
+
+    num_of_class_sessions: async function (client, cp_id) {
+        const query = {
+            text: "select COUNT(*) from class_sessions where cp_id = $1",
+            values: [cp_id],
+        }
+        try {
+            const res = await client.query(query)
+            console.log(res.rows[0])
+            return res.rows[0];
+        } catch (err) {
+            console.log(err.stack)
+            return 'user not found';
+        }
+    },
+
     insert_request: async function (client, attendance_id, request_type, request_comment) {
         const query = {
             text: "insert into requests(attendance_id, request_type, request_comment, request_date, request_time) values($1, $2, $3, current_date, current_time)",
@@ -236,12 +281,17 @@ module.exports = {
 
     change_request_status: async function (client, attendance_id, attendance_new_status, request_status) {
         const query = {
-            text: "UPDATE attendance SET attendance_status = $1 WHERE id = $2; UPDATE requests SET request_status = $3, request_date = CURRENT_DATE, request_time = CURRENT_TIME WHERE attendance_id = $2",
-            values: [attendance_new_status, attendance_id, request_status],
+            text: "UPDATE attendance SET attendance_status = $1 WHERE id = $2",
+            values: [attendance_new_status, attendance_id],
+        }
+        const query2 = {
+            text: "UPDATE requests SET request_status = $2, request_date = CURRENT_DATE, request_time = CURRENT_TIME WHERE attendance_id = $1",
+            values: [attendance_id, request_status],
         }
         try {
             console.log({attendance_id, attendance_new_status, request_status})
             const res = await client.query(query)
+            const res2 = await client.query(query2)
             return {status: 'ok'};
         } catch (err) {
             console.log(err.stack)
