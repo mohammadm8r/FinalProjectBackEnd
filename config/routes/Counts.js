@@ -59,4 +59,17 @@ module.exports = [
             }
         }
     },
+    {
+        method: 'POST',
+        path: '/eachSessionRequestUnread',
+        handler: (request, h) => {
+            const payload = request.payload;
+            let res = db.num_of_requests_unread_each_session(db.client, payload.attendance_id);
+            if (isUndefined(res)) {
+                return `user not found`
+            } else {
+                return res;
+            }
+        }
+    },
 ];

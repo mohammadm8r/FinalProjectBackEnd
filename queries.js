@@ -194,6 +194,21 @@ module.exports = {
         }
     },
 
+    num_of_requests_unread_each_session: async function (client, attendanceID) {
+        const query = {
+            text: "select COUNT(*) from requests where attendance_id = $1",
+            values: [attendanceID],
+        }
+        try {
+            const res = await client.query(query)
+            console.log(res.rows[0])
+            return res.rows[0];
+        } catch (err) {
+            console.log(err.stack)
+            return 'user not found';
+        }
+    },
+
     num_of_class_sessions: async function (client, cp_id) {
         const query = {
             text: "select COUNT(*) from class_sessions where cp_id = $1",
